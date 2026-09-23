@@ -5,7 +5,7 @@ document.addEventListener('submit', function (event) {
     notice.textContent = 'Form gönderimi henüz aktif değil. Bilgileriniz gönderilmedi ve kaydedilmedi.';
 }, true);
 (function ($) {
-    if ($.fn.owlCarousel) $('.single-slides').owlCarousel({items:1,nav:true,loop:true,autoplay:false});
+    if ($.fn.owlCarousel) $('.single-slides').owlCarousel({items:1,nav:true,loop:true,autoplay:false,navText:['<i class="fa fa-angle-left"></i>','<i class="fa fa-angle-right"></i>']});
     $('.progress').each(function () { $(this).find('.progress-bar').css('width', $(this).attr('data-percent')); });
     if ($.fn.prettyPhoto) $('a[data-rel="prettyPhoto"]').prettyPhoto({social_tools:false});
 })(jQuery);
