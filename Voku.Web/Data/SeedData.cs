@@ -10,7 +10,7 @@ public static class SeedData
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<SiteDbContext>();
         await db.Database.MigrateAsync();
-        if (!await db.AdminUsers.AnyAsync())
+        if (config.GetValue("Admin:RequireAuthentication", true) && !await db.AdminUsers.AnyAsync())
         {
             var password = config["Admin:Password"];
             if (string.IsNullOrWhiteSpace(password) || password.Length < 12)

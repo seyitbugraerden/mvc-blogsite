@@ -9,14 +9,16 @@ using Microsoft.EntityFrameworkCore;
 using Voku.Web.Data;
 using Voku.Web.Models;
 namespace Voku.Web.Controllers;
-[Authorize, Route("admin")]
-public class AdminController(SiteDbContext db) : Controller
+[Authorize(Policy = "AdminAccess"), Route("admin")]
+public class AdminController(SiteDbContext db, IConfiguration configuration) : Controller
 {
     [AllowAnonymous, HttpGet("login")]
-    public IActionResult Login() => View(new LoginModel());
+    public IActionResult Login() => configuration.GetValue("Admin:RequireAuthentication", true)
+        ? View(new LoginModel()) : RedirectToAction(nameof(Index));
     [AllowAnonymous, HttpPost("login"), EnableRateLimiting("login")]
     public async Task<IActionResult> Login(LoginModel input)
     {
+        if (!configuration.GetValue("Admin:RequireAuthentication", true)) return RedirectToAction(nameof(Index));
         if (!ModelState.IsValid) return View(input);
         var user = await db.AdminUsers.SingleOrDefaultAsync(u => u.Username == input.Username);
         if (user == null || new PasswordHasher<AdminUser>().VerifyHashedPassword(user, user.PasswordHash, input.Password) == PasswordVerificationResult.Failed)

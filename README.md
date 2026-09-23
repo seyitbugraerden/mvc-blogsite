@@ -4,17 +4,15 @@
 
 ## Çalıştırma
 
-.NET 10 SDK gereklidir. İlk çalıştırmadan önce yönetici şifresi belirleyin:
+.NET 10 SDK gereklidir. Şimdilik giriş kontrolü kapalıdır; `/admin` doğrudan açılır.
 
 ```bash
-# zsh: şifreyi terminal geçmişine yazmadan alır
-read -s 'Admin__Password?Yönetici şifresi (en az 12 karakter): '
-export Admin__Password
-dotnet restore
-dotnet run --project Voku.Web --launch-profile http
+dotnet run --project /Users/macuser/Desktop/dotnet-blogpage/Voku.Web/Voku.Web.csproj --launch-profile http
 ```
 
 Site: http://localhost:5080 · Yönetim: http://localhost:5080/admin
+
+`Admin:RequireAuthentication` ayarı `appsettings.json` içinde `false`. Bu ayarda admin işlemleri herkese açıktır ve ilk açılışta şifre istenmez. Tekrar giriş istemek için ayarı `true` yapın veya `Admin__RequireAuthentication=true` tanımlayın. Henüz hesap yoksa `Admin__Password` ile en az 12 karakterlik ilk şifreyi belirtin. Mevcut hesap varsa eski şifresi korunur.
 
 Varsayılan kullanıcı adı `admin`; ilk kurulumda `Admin__Username` ile değiştirilebilir. Şifre PBKDF2 tabanlı ASP.NET Core PasswordHasher ile hashlenir. İlk kurulumdan sonra bu değişkenler mevcut kullanıcıyı değiştirmez. Şifre kaynak koduna veya Git'e eklenmez.
 
@@ -54,7 +52,7 @@ dotnet ef database update --project Voku.Web
 dotnet publish Voku.Web -c Release -o ./publish
 ```
 
-Yayın ortamında HTTPS sağlayın; `App_Data` dizinini kalıcı ve yazılabilir tutun. Birden fazla uygulama örneği kullanmadan önce migration uygulamasını dağıtım adımına taşıyın. Admin girişine hız sınırı, cookie kimlik doğrulaması ve yazma işlemlerine CSRF koruması uygulanır. HTML düzenleyicisi güvenilir yöneticiler içindir; inline script çalıştırılmaz.
+Yayın ortamında HTTPS sağlayın; `App_Data` dizinini kalıcı ve yazılabilir tutun. Birden fazla uygulama örneği kullanmadan önce migration uygulamasını dağıtım adımına taşıyın. Giriş kontrolü etkinleştirildiğinde admin girişine hız sınırı ve cookie kimlik doğrulaması uygulanır. Yazma işlemlerindeki CSRF koruması her iki modda da etkindir. HTML düzenleyicisi güvenilir yöneticiler içindir; inline script çalıştırılmaz.
 
 ## Doğrulama ve Git akışı
 

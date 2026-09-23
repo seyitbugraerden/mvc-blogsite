@@ -12,7 +12,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     o.Cookie.Name = "Voku.Admin"; o.Cookie.HttpOnly = true;
     o.ExpireTimeSpan = TimeSpan.FromHours(4);
 });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+    options.AddPolicy("AdminAccess", policy => policy.RequireAssertion(context =>
+        !builder.Configuration.GetValue("Admin:RequireAuthentication", true)
+        || context.User.Identity?.IsAuthenticated == true)));
 builder.Services.AddRateLimiter(o => {
     o.RejectionStatusCode = 429;
     o.AddPolicy("login", context => RateLimitPartition.GetFixedWindowLimiter(context.Connection.RemoteIpAddress?.ToString() ?? "unknown", _ => new FixedWindowRateLimiterOptions { PermitLimit=10, Window=TimeSpan.FromMinutes(1), QueueLimit=0 }));

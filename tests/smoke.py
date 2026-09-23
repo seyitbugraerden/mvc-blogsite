@@ -40,7 +40,7 @@ with tempfile.TemporaryDirectory(prefix='voku-smoke-') as directory:
     database = str(Path(directory) / 'test.db')
     password = secrets.token_urlsafe(24)
     env = dict(os.environ, ASPNETCORE_ENVIRONMENT='Development', ASPNETCORE_URLS=BASE,
-               Admin__Password=password, ConnectionStrings__Default=f'Data Source={database}')
+               Admin__RequireAuthentication='true', Admin__Password=password, ConnectionStrings__Default=f'Data Source={database}')
     log = open(Path(directory) / 'server.log', 'w+')
     def start():
         proc = subprocess.Popen(['dotnet', str(ROOT / 'Voku.Web/bin/Debug/net10.0/Voku.Web.dll')], cwd=ROOT / 'Voku.Web', env=env, stdout=log, stderr=log)
@@ -106,7 +106,20 @@ with tempfile.TemporaryDirectory(prefix='voku-smoke-') as directory:
         with sqlite3.connect(database) as db:
             assert db.execute('SELECT count(*) FROM Pages').fetchone()[0] == 14
             assert db.execute('SELECT PasswordHash FROM AdminUsers').fetchone()[0] != password
-        print('PASS: 13 seeded pages, assets, authentication, CSRF, editing, unique/invalid slugs, draft visibility, slug/link updates, disabled forms, restart persistence.')
+        process.terminate(); process.wait(timeout=10)
+        opener = urllib.request.build_opener(NoRedirect(), urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+        env['Admin__RequireAuthentication'] = 'false'
+        env.pop('Admin__Password')
+        env['ConnectionStrings__Default'] = f'Data Source={directory}/open-admin.db'
+        process = start()
+        assert request('/admin')[0] == 200, 'Anonymous admin blocked'
+        assert request('/admin/login')[0] == 302, 'Login should redirect to admin'
+        csrf = token(request('/admin/pages/about/edit')[1])
+        fields.update(Slug='about', Title='Anonymous edit', Published='true', __RequestVerificationToken=csrf)
+        assert request('/admin/pages/about/edit', fields)[0] == 302
+        assert 'Updated content' in request('/about')[1]
+        assert request('/admin/pages/about/edit', {'Title': 'No token'})[0] == 400
+        print('PASS: 13 seeded pages, assets, authentication, CSRF, editing, unique/invalid slugs, draft visibility, slug/link updates, disabled forms, restart persistence, optional authentication and anonymous editing.')
     finally:
         process.terminate()
         process.wait(timeout=10)
