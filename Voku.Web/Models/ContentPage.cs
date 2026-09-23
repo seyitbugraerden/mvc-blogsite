@@ -8,7 +8,7 @@ public class ContentPage
     public string Slug { get; set; } = "";
     public bool IsDetail { get; set; }
     [Required] public string BodyHtml { get; set; } = "";
-    [StringLength(300)] public string Description { get; set; } = "";
+    [StringLength(300)] public string? Description { get; set; } = "";
     public bool Published { get; set; } = true;
     public DateTime UpdatedUtc { get; set; } = DateTime.UtcNow;
     public string Url => IsDetail ? $"/blog/{Slug}" : Slug == "home" ? "/" : $"/{Slug}";

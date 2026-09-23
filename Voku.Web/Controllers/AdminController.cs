@@ -44,9 +44,9 @@ public class AdminController(SiteDbContext db) : Controller
         return View("Edit", new ContentPage { IsDetail=true, Published=false, BodyHtml=template?.BodyHtml ?? "<main class=\"container\"><h1>Yeni yazı</h1><p>İçerik</p></main>" });
     }
     [HttpPost("pages/{slug}/edit")]
-    public Task<IActionResult> SavePage(string slug, ContentPage input) => Save(slug, false, input);
+    public Task<IActionResult> SavePage([FromRoute] string slug, ContentPage input) => Save(slug, false, input);
     [HttpPost("posts/{slug}/edit")]
-    public Task<IActionResult> SavePost(string slug, ContentPage input) => Save(slug, true, input);
+    public Task<IActionResult> SavePost([FromRoute] string slug, ContentPage input) => Save(slug, true, input);
     [HttpPost("posts/new")]
     public Task<IActionResult> Create(ContentPage input) => Save(null, true, input);
     private async Task<IActionResult> Save(string? oldSlug, bool detail, ContentPage input)
