@@ -1,0 +1,9 @@
+@model ContentPage
+<div class="heading"><div><a href="/admin">← İçerikler</a><h1>@(Model.Id == 0 ? "Yeni detay" : Model.Title)</h1></div>@if(Model.Id != 0) {<a href="@Model.Url" target="_blank" rel="noopener">Sayfayı aç ↗</a>}</div>
+<form method="post">@Html.AntiForgeryToken()<div asp-validation-summary="All"></div>
+<div class="fields"><div><label asp-for="Title">Sayfa başlığı (tarayıcı / liste)</label><input asp-for="Title" maxlength="160" required></div><div><label asp-for="Slug">Slug</label><input asp-for="Slug" readonly="@(!Model.IsDetail)" maxlength="120" required><small>@(Model.IsDetail ? "Adres: /blog/slug — küçük harf, rakam ve tire." : "Sabit sayfa adresi korunur.")</small></div></div>
+<label asp-for="Description">SEO açıklaması</label><textarea asp-for="Description" rows="2" maxlength="300"></textarea>
+<label class="check"><input asp-for="Published"> Yayında</label>
+<label asp-for="BodyHtml">Sayfa içeriği (HTML)</label><p>Voku düzeni burada korunur. Görünen metinleri, görsel yollarını ve bağlantıları düzenleyebilirsiniz. Başlık alanı sayfa içindeki metinlerden bağımsızdır. Script eklemeyin.</p><textarea asp-for="BodyHtml" class="code" rows="28" spellcheck="false" required></textarea>
+<button class="primary">Değişiklikleri kaydet</button>
+</form>

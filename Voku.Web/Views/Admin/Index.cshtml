@@ -1,0 +1,7 @@
+@model List<ContentPage>
+<div class="heading"><div><p>VOKU CMS</p><h1>İçerikler</h1><p>Sayfaları ve slug tabanlı blog detaylarını yönetin.</p></div><a class="primary" href="/admin/posts/new">+ Yeni detay</a></div>
+@foreach (var detail in new[] { false, true }) {
+<h2>@(detail ? "Blog detayları" : "Sayfalar")</h2><div class="table-wrap"><table><thead><tr><th>Başlık</th><th>Route</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>
+@foreach (var page in Model.Where(p => p.IsDetail == detail)) {
+<tr><td>@page.Title</td><td><a href="@page.Url" target="_blank" rel="noopener">@page.Url ↗</a></td><td>@(page.Published ? "Yayında" : "Taslak")</td><td><a href="/admin/@(detail ? "posts" : "pages")/@page.Slug/edit">Düzenle →</a></td></tr>
+}</tbody></table></div>}

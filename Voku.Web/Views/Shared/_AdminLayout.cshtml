@@ -1,0 +1,3 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Voku Yönetim</title><link rel="stylesheet" href="/css/admin.css"></head>
+<body><header><a href="/admin"><strong>VOKU</strong> / Yönetim</a><nav><a href="/" target="_blank" rel="noopener">Siteyi aç ↗</a>@if (User.Identity?.IsAuthenticated == true) { <form action="/admin/logout" method="post">@Html.AntiForgeryToken()<button>Çıkış</button></form> }</nav></header><main>@if (TempData["Success"] is string message) {<p class="notice" role="status">@message</p>}@RenderBody()</main></body></html>

@@ -14,4 +14,5 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
   </ItemGroup>
 
+<ItemGroup><Content Include="Content/**/*.html" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
 </Project>

@@ -1,0 +1,8 @@
+@model ContentPage
+@{ Layout = null; }
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>@Model.Title — Voku</title><meta name="description" content="@Model.Description"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,700,800,300"><link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/responsive.css"><link rel="stylesheet" href="/css/cms.css"></head><body>
+@Html.Raw(Model.BodyHtml)
+@if (Model.Slug == "blog" && !Model.IsDetail) {
+<section class="container margin-bottom-50"><h2>Tüm yazılar</h2><div class="row">@foreach (ContentPage post in ViewBag.Posts) { <article class="col-md-4"><h3><a href="@post.Url">@post.Title</a></h3><p>@post.Description</p><a href="@post.Url">Devamını oku →</a></article> }</div></section>
+}
+<script src="/js/vendors/jquery/jquery.min.js"></script><script src="/js/vendors/bootstrap.min.js"></script><script src="/js/vendors/own-menu.js"></script><script src="/js/vendors/owl.carousel.min.js"></script><script src="/js/vendors/jquery.prettyPhoto.js"></script><script src="/js/cms.js"></script></body></html>

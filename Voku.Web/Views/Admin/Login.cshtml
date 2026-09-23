@@ -1,0 +1,2 @@
+@model LoginModel
+<div class="login"><p>İÇERİK YÖNETİMİ</p><h1>Hoş geldiniz</h1><form method="post">@Html.AntiForgeryToken()<div asp-validation-summary="All"></div><label asp-for="Username">Kullanıcı adı</label><input asp-for="Username" autocomplete="username"><label asp-for="Password">Şifre</label><input asp-for="Password" autocomplete="current-password"><button class="primary">Giriş yap</button></form></div>
