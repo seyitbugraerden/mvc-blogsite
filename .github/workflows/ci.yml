@@ -1,0 +1,21 @@
+name: Build and integration tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: dotnet restore Voku.slnx
+      - run: dotnet build Voku.slnx --no-restore
+      - run: python3 tests/smoke.py
