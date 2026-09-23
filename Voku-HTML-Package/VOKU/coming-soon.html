@@ -1,0 +1,85 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="author" content="M_Adnan" />
+<!-- Document Title -->
+<title>Voku HTML5 Templates</title>
+
+<!-- Fonts Online -->
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,700,800,300' rel='stylesheet' type='text/css'>
+
+<!-- StyleSheets -->
+<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+<!-- JavaScripts -->
+<script src="js/vendors/modernizr.js"></script>
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="site-offline coming-soon">
+  <div class="post-content">
+    <div class="position-center-center full-w">
+      <div class="container">
+        
+        
+        <ul class="countdown row">
+            <!--======= Days =========-->
+            <li class="col-sm-3"> 
+            
+            <article>
+            <span class="days">00</span>
+              <p class="days_ref">days</p></article>
+            </li>
+            <!--======= Hours =========-->
+            <li class="col-sm-3">
+              <div> <article><span class="hours">00</span>
+                <p class="hours_ref">hours</p></article>
+              </div>
+            </li>
+            <!--======= Mintes =========-->
+            <li class="col-sm-3"><article> <span class="minutes">00</span>
+              <p class="minutes_ref">minutes</p></article>
+            </li>
+            <!--======= Seconds =========-->
+            <li class="col-sm-3"><article> <span class="seconds">00</span>
+              <p class="seconds_ref">seconds</p></article>
+            </li>
+          </ul>
+        
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScripts --> 
+<script src="js/vendors/jquery/jquery.min.js"></script> 
+<script src="js/vendors/bootstrap.min.js"></script> 
+<script src="js/vendors/own-menu.js"></script> 
+<script src="js/vendors/owl.carousel.min.js"></script> 
+<script src="js/voku.js"></script>
+<script type="text/javascript">
+/* ==========================================================================
+    countdown timer
+========================================================================== */
+(function($) {
+  "use strict";
+	$('.countdown').downCount({
+     date: '12/12/2016 12:00:00' // M/D/Y
+});
+})(jQuery);
+</script>
+</body>
+</html>

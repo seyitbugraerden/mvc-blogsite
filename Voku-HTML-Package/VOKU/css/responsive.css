@@ -1,0 +1,159 @@
+@media(min-width:1400px) and (max-width:1920px) {
+}
+@media(min-width:1200px) and (max-width:1400px) {
+}
+@media(max-width:1200px) {
+}
+@media(max-width:1024px) {
+}
+@media(min-width:992px) and (max-width:1199px) {
+}
+@media(min-width:768px) and (max-width:991px) {
+header nav li {
+	padding: 0 15px;
+}
+.header-2{
+	z-index:99;
+}
+.some-photo li{
+	width:50%;
+}
+.some-photo li img{
+	width:100%;
+}
+
+}
+@media(max-width:767px) {
+.profile{
+	position:absolute;
+	top:46px;
+	right:60px;
+}
+.container{
+	padding:0 15px;
+}
+header nav li a:hover:before{
+	display:none;
+}
+.some-photo li{
+	width:100%;
+}
+.some-photo li img{
+	width:100%;
+}
+.ownmenu > li a:hover{
+	background:#673ab7;
+	color:#fff;
+	
+}
+footer{
+	text-align:center;
+}
+.footer-link{
+	text-align:center;
+	margin-top:20px;
+}
+.ownmenu > li > a > i{
+	display:none;
+}
+header{
+	z-index:99999;
+	padding-bottom:20px;
+}
+header nav{
+	width:100%;
+	margin:0px;
+	position:relative;
+	z-index:999999;
+	
+}
+.ownmenu > li.showhide{
+	height:auto;
+}
+.ownmenu > li{
+	padding:0px;
+}
+.news-letter img{
+	width:100%;
+}
+.tabs-link li.pull-right{
+	display:none;
+}
+header nav li.active a:before{
+	display:none;
+}
+.post-content li article{
+	height:auto;
+	min-height:360px;
+}
+.post-content li{
+	display:inline-block;
+	width:100%;
+}
+.tabs-link{
+	text-align:center;
+}
+.tabs-link li{
+	margin-bottom:10px;
+	width:auto;
+}
+.ownmenu{
+}
+.ownmenu > li.showhide{
+	position:absolute;
+	width:50px;
+	margin:0 auto;
+	left:0px;
+	right:0px;
+	top:-50px;
+}
+.ownmenu > li a{
+	display:inline-block;
+	width:100%;
+	line-height:24px;
+	padding:10px 20px;
+}
+li.fst-icon a{
+	padding:0px !important; 
+}
+.ownmenu{
+	margin-top:30px;
+}
+.ownmenu > li.showhide{
+	text-align:center;
+}
+.ownmenu > li.showhide span.icon{
+	float:none;
+	color:#000;
+	font-size:16px;
+	position:absolute;
+	margin:0 auto;
+}
+.ownmenu > li.showhide span.title{
+	display:none;
+}
+.header-2{
+	left:0px;
+}
+}
+@media (max-width:640px) {
+.footer-link a{
+	margin:0 10px;
+	margin-bottom:15px;
+}
+.footer-link a:nth-last-child(1){
+	margin:inherit;
+}
+}
+@media(max-width:540px) {
+}
+@media(max-width:440px) {
+.footer-link a{
+	margin:0 10px;
+}
+.footer-link a:nth-last-child(1){
+	margin:inherit;
+}
+}
+@media(max-width:320px) {
+}
