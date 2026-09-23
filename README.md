@@ -66,3 +66,9 @@ Smoke testi ayrı geçici SQLite dosyası ve uygulama süreci kullanır; gerçek
 Anlamlı aşamalar Conventional Commits (`feat`, `fix`, `test`, `docs`, `chore`) ile kaydedilir ve `origin/main` dalına gönderilir.
 
 EF Core SQLite/migration referansı: https://learn.microsoft.com/en-us/ef/core/get-started/netcore/new-db-sqlite
+
+## Ayrıntılı eğitim rehberi
+
+[PDF: Voku CMS Eğitim Rehberi](docs/Voku-CMS-Egitim-Rehberi.pdf) — Kuruluş, kullanılan diller, MVC veri akışı, controller/view/model ilişkileri, EF Core, migrations, admin formları, slug yönetimi ve testleri 28 bölümde anlatır.
+
+[Tarayıcıda okunabilir HTML](docs/Voku-CMS-Egitim-Rehberi.html). Kaynak belge `docs/build_guide.py` ile üretilir. Rehber uygulamanın `2688cd4` sürümünü temel alır; örnek geliştirmeler mevcut özelliklerden ayrı belirtilmiştir.
