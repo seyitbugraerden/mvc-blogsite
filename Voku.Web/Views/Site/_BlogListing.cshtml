@@ -1,0 +1,42 @@
+@model SitePageViewModel
+<section class="post-content dynamic-blog margin-top-50 margin-bottom-50" aria-label="Blog yazıları">
+    <div class="blog-list-heading"><h2>@(Model.Page.Slug == "home" ? "Son yazılar" : "Tüm yazılar")</h2><span>@Model.TotalPosts yazı</span></div>
+    @if (Model.Page.Slug == "blog" && Model.Categories.Count > 0)
+    {
+        <nav class="blog-filters" aria-label="Kategori filtresi">
+            <a class="@(string.IsNullOrEmpty(Model.Category) ? "selected" : "")" href="/blog">Tümü</a>
+            @foreach (var category in Model.Categories)
+            { <a class="@(Model.Category == category ? "selected" : "")" href="@Model.ListingUrl(1, category)">@category</a> }
+        </nav>
+    }
+    @if (Model.Posts.Count == 0)
+    {
+        <div class="blog-empty"><h3>Henüz yayınlanmış yazı yok.</h3><p>@(string.IsNullOrEmpty(Model.Category) ? "Yeni yazılar burada görünecek." : "Bu kategoride yayınlanmış yazı bulunamadı.")</p></div>
+    }
+    <div class="blog-grid">
+    @foreach (var post in Model.Posts)
+    {
+        <article class="blog-card" data-post-slug="@post.Slug">
+            <a href="@post.Url" class="blog-card-image" aria-label="@post.Title"><img src="@(post.CoverImageUrl ?? "/images/blog-post-bg.jpg")" alt="@post.Title" loading="lazy"></a>
+            <div class="blog-card-body">
+                <div class="blog-meta"><time datetime="@post.PublishedAtUtc.ToString("O")">@post.PublishedAtUtc.ToString("dd.MM.yyyy")</time>
+                    @if (!string.IsNullOrWhiteSpace(post.Category)) { <a href="@Model.ListingUrl(1, post.Category)">@post.Category</a> }
+                </div>
+                <h3><a href="@post.Url" class="tittle-post">@post.Title</a></h3>
+                <p class="blog-excerpt">@post.Description</p>
+                <div class="blog-card-bottom"><span>@post.Author</span><a href="@post.Url">Devamını oku →</a></div>
+            </div>
+        </article>
+    }
+    </div>
+    @if (Model.Page.Slug == "home")
+    { <a href="/blog" class="load-more">Tüm yazıları gör <i class="fa fa-angle-right" aria-hidden="true"></i></a> }
+    else if (Model.TotalPages > 1)
+    {
+        <nav class="blog-pagination" aria-label="Yazı sayfaları">
+            @if (Model.PageNumber > 1) { <a rel="prev" href="@Model.ListingUrl(Model.PageNumber - 1, Model.Category)">← Önceki</a> }
+            <span>Sayfa @Model.PageNumber / @Model.TotalPages</span>
+            @if (Model.PageNumber < Model.TotalPages) { <a rel="next" href="@Model.ListingUrl(Model.PageNumber + 1, Model.Category)">Sonraki →</a> }
+        </nav>
+    }
+</section>

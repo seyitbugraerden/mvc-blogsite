@@ -54,6 +54,20 @@ public static class SeedData
                     BodyHtml = new Regex(@"<h2>[\s\S]*?</h2>").Replace(detailTemplate.BodyHtml, $"<h2><span>{post.Key}</span></h2>", 1)
                 });
         }
+        // Metadata for newly seeded articles. Existing records are handled by the migration.
+        foreach (var entry in db.ChangeTracker.Entries<ContentPage>().Where(e => e.State == EntityState.Added && e.Entity.IsDetail))
+        {
+            var post = entry.Entity;
+            post.CoverImageUrl = post.Slug switch {
+                "full-review-of-my-house" => "/images/img-1.jpg",
+                "true-story-about-tim-finch" => "/images/img-4.jpg",
+                "paris-the-first-day" => "/images/img-7.jpg",
+                _ => "/images/img-2.jpg"
+            };
+            post.Category = "Genel";
+            post.Author = "Voku";
+            post.BodyHtml = BlogMarkup.ArticleBody(post.BodyHtml);
+        }
         await db.SaveChangesAsync();
     }
 }

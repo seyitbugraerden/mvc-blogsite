@@ -37,14 +37,17 @@ public class AdminController(SiteDbContext db, IConfiguration configuration) : C
     private async Task<IActionResult> Editor(string slug, bool detail)
     {
         var page = await db.Pages.AsNoTracking().SingleOrDefaultAsync(p => p.Slug == slug && p.IsDetail == detail);
-        return page == null ? NotFound() : View("Edit", page);
+        if (page == null) return NotFound();
+        page.BodyHtml = page.IsDetail ? BlogMarkup.ArticleBody(page.BodyHtml)
+            : page.Slug is "home" or "blog" ? BlogMarkup.ListingTemplate(page.BodyHtml) : page.BodyHtml;
+        return View("Edit", page);
     }
     [HttpGet("posts/new")]
-    public async Task<IActionResult> New()
-    {
-        var template = await db.Pages.AsNoTracking().FirstOrDefaultAsync(p => p.IsDetail);
-        return View("Edit", new ContentPage { IsDetail=true, Published=false, BodyHtml=template?.BodyHtml ?? "<main class=\"container\"><h1>Yeni yazı</h1><p>İçerik</p></main>" });
-    }
+    public IActionResult New() => View("Edit", new ContentPage {
+        IsDetail = true, Published = false, Category = "Genel",
+        CoverImageUrl = "/images/blog-post-bg.jpg",
+        BodyHtml = "<section class=\"container margin-top-50 margin-bottom-50\"><p>Yazınızı buraya ekleyin.</p></section>"
+    });
     [HttpPost("pages/{slug}/edit")]
     public Task<IActionResult> SavePage([FromRoute] string slug, ContentPage input) => Save(slug, false, input);
     [HttpPost("posts/{slug}/edit")]
@@ -62,7 +65,15 @@ public class AdminController(SiteDbContext db, IConfiguration configuration) : C
         if (!ModelState.IsValid) return View("Edit", input);
         var oldUrl = page.Url;
         page.Title=input.Title; page.Slug=input.Slug; page.Description=input.Description ?? "";
-        page.BodyHtml=input.BodyHtml; page.Published=input.Published; page.UpdatedUtc=DateTime.UtcNow;
+        if (detail)
+        {
+            page.CoverImageUrl = string.IsNullOrWhiteSpace(input.CoverImageUrl) ? null : input.CoverImageUrl.Trim();
+            page.Category = string.IsNullOrWhiteSpace(input.Category) ? null : input.Category.Trim();
+            page.Author = string.IsNullOrWhiteSpace(input.Author) ? null : input.Author.Trim();
+            page.PublishedAtUtc = DateTime.SpecifyKind(input.PublishedAtUtc, DateTimeKind.Utc);
+        }
+        page.BodyHtml=detail ? BlogMarkup.ArticleBody(input.BodyHtml)
+            : page.Slug is "home" or "blog" ? BlogMarkup.ListingTemplate(input.BodyHtml) : input.BodyHtml; page.Published=input.Published; page.UpdatedUtc=DateTime.UtcNow;
         if (oldSlug == null) db.Pages.Add(page);
         else if (detail && oldSlug != page.Slug)
         {

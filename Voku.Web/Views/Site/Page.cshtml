@@ -1,15 +1,56 @@
-@model ContentPage
+@model SitePageViewModel
+@using Voku.Web.Data
 @{
     Layout = null;
-    var showPosts = Model.Slug == "blog" && !Model.IsDetail;
-    var footerIndex = showPosts ? Model.BodyHtml.IndexOf("<!-- FOOTER -->", StringComparison.Ordinal) : -1;
-    var content = footerIndex >= 0 ? Model.BodyHtml[..footerIndex] : Model.BodyHtml;
-    var footer = footerIndex >= 0 ? Model.BodyHtml[footerIndex..] : "";
+    var entry = Model.Page;
+    var isListing = !entry.IsDetail && (entry.Slug == "home" || entry.Slug == "blog");
 }
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>@Model.Title — Voku</title><meta name="description" content="@Model.Description"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,700,800,300"><link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/responsive.css"><link rel="stylesheet" href="/css/cms.css"></head><body>
-@Html.Raw(content)
-@if (showPosts) {
-<section class="container margin-bottom-50"><h2>Tüm yazılar</h2><div class="row">@foreach (ContentPage post in ViewBag.Posts) { <article class="col-md-4"><h3><a href="@post.Url">@post.Title</a></h3><p>@post.Description</p><a href="@post.Url">Devamını oku →</a></article> }</div></section>
+<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@entry.Title — Voku</title><meta name="description" content="@entry.Description">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,700,800,300">
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/responsive.css"><link rel="stylesheet" href="/css/cms.css">
+</head>
+<body>
+@if (entry.IsDetail)
+{
+    <div id="wrap">
+        <div class="container">@Html.Raw(Model.HeaderHtml)</div>
+        <main>
+            <section class="blog-hero">
+                <img src="@(entry.CoverImageUrl ?? "/images/blog-post-bg.jpg")" alt="" class="blog-hero-image">
+                <div class="container blog-hero-text">
+                    <nav aria-label="Sayfa yolu"><a href="/">Ana sayfa</a> / <a href="/blog">Blog</a></nav>
+                    <h1>@entry.Title</h1>
+                    <div class="blog-meta"><time datetime="@entry.PublishedAtUtc.ToString("O")">@entry.PublishedAtUtc.ToString("dd.MM.yyyy")</time>
+                    @if (!string.IsNullOrWhiteSpace(entry.Author)) { <span>@entry.Author</span> }
+                    @if (!string.IsNullOrWhiteSpace(entry.Category)) { <a href="@Model.ListingUrl(1, entry.Category)">@entry.Category</a> }</div>
+                </div>
+            </section>
+            @if (!string.IsNullOrWhiteSpace(entry.Description)) { <p class="container blog-intro">@entry.Description</p> }
+            <div id="content" class="article-content">@Html.Raw(BlogMarkup.ArticleBody(entry.BodyHtml))</div>
+            <div class="container margin-top-50 margin-bottom-50"><a href="/blog">← Tüm yazılara dön</a></div>
+        </main>
+        @Html.Raw(Model.FooterHtml)
+    </div>
 }
-@Html.Raw(footer)
-<script src="/js/vendors/jquery/jquery.min.js"></script><script src="/js/vendors/bootstrap.min.js"></script><script src="/js/vendors/own-menu.js"></script><script src="/js/vendors/owl.carousel.min.js"></script><script src="/js/vendors/jquery.prettyPhoto.js"></script><script src="/js/cms.js"></script></body></html>
+else if (isListing)
+{
+    var html = BlogMarkup.ListingTemplate(entry.BodyHtml);
+    var marker = html.IndexOf(BlogMarkup.ListMarker, StringComparison.Ordinal);
+    @Html.Raw(html[..marker])
+    <partial name="_BlogListing" model="Model" />
+    @Html.Raw(html[(marker + BlogMarkup.ListMarker.Length)..])
+}
+else
+{
+    @Html.Raw(BlogMarkup.PublicHtml(entry.BodyHtml))
+}
+<script src="/js/vendors/jquery/jquery.min.js"></script><script src="/js/vendors/bootstrap.min.js"></script>
+<script src="/js/vendors/own-menu.js"></script><script src="/js/vendors/owl.carousel.min.js"></script>
+<script src="/js/vendors/jquery.prettyPhoto.js"></script><script src="/js/cms.js"></script>
+</body></html>

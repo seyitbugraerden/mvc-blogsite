@@ -9,6 +9,11 @@ public class ContentPage
     public bool IsDetail { get; set; }
     [Required] public string BodyHtml { get; set; } = "";
     [StringLength(300)] public string? Description { get; set; } = "";
+    [StringLength(500), RegularExpression(@"^(?:/(?!/)|https://)[^\s""'<>\\]+$", ErrorMessage = "Görsel yolu /images/... veya https://... biçiminde olmalı.")]
+    public string? CoverImageUrl { get; set; }
+    [StringLength(80)] public string? Category { get; set; }
+    [StringLength(100)] public string? Author { get; set; }
+    public DateTime PublishedAtUtc { get; set; } = DateTime.UtcNow;
     public bool Published { get; set; } = true;
     public DateTime UpdatedUtc { get; set; } = DateTime.UtcNow;
     public string Url => IsDetail ? $"/blog/{Slug}" : Slug == "home" ? "/" : $"/{Slug}";

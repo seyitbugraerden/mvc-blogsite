@@ -1,10 +1,24 @@
 @model ContentPage
 <div class="heading"><div><a href="/admin">← İçerikler</a><h1>@(Model.Id == 0 ? "Yeni detay" : Model.Title)</h1></div>@if(Model.Id != 0) {<a href="@Model.Url" target="_blank" rel="noopener">Sayfayı aç ↗</a>}</div>
 <form method="post">@Html.AntiForgeryToken()<div asp-validation-summary="All"></div>
-<div class="fields"><div><label asp-for="Title">Sayfa başlığı (tarayıcı / liste)</label><input asp-for="Title" maxlength="160" required></div><div><label asp-for="Slug">Slug</label><input asp-for="Slug" readonly="@(!Model.IsDetail)" maxlength="120" required><small>@(Model.IsDetail ? "Adres: /blog/slug — küçük harf, rakam ve tire." : "Sabit sayfa adresi korunur.")</small></div></div>
-<label asp-for="Description">SEO açıklaması</label><textarea asp-for="Description" rows="2" maxlength="300"></textarea>
+<div class="fields"><div><label asp-for="Title">Başlık</label><input asp-for="Title" maxlength="160" required></div><div><label asp-for="Slug">Slug</label><input asp-for="Slug" readonly="@(!Model.IsDetail)" maxlength="120" required><small>@(Model.IsDetail ? "Adres: /blog/slug — küçük harf, rakam ve tire." : "Sabit sayfa adresi korunur.")</small></div></div>
+<label asp-for="Description">Özet / SEO açıklaması</label><textarea asp-for="Description" rows="2" maxlength="300"></textarea>
+@if (Model.IsDetail)
+{
+    <div class="fields">
+        <div><label asp-for="CoverImageUrl">Kapak görseli</label><input asp-for="CoverImageUrl" placeholder="/images/blog-post-bg.jpg"><small>Yerel görsel yolu veya HTTPS adresi. Kart ve detay sayfasında kullanılır.</small></div>
+        <div><label asp-for="Category">Kategori</label><input asp-for="Category" maxlength="80"></div>
+        <div><label asp-for="Author">Yazar</label><input asp-for="Author" maxlength="100"></div>
+        <div><label asp-for="PublishedAtUtc">Yazı tarihi (UTC)</label><input asp-for="PublishedAtUtc" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" required><small>Sıralama ve gösterim tarihi; zamanlanmış yayın değildir.</small></div>
+    </div>
+    <p>Başlık, özet ve kapak tüm kartlara ve detay sayfasına otomatik yansır. Aşağıda yalnızca yazı gövdesini düzenleyin.</p>
+}
+else if (Model.Slug is "home" or "blog")
+{
+    <p>Blog kartları yayınlanmış yazılardan otomatik oluşturulur. Yazıları <a href="/admin">içerik listesinden</a> yönetin. HTML içindeki BLOG_LIST işareti liste konumudur.</p>
+}
 <label class="check"><input asp-for="Published"> Yayında</label>
-<details open><summary>Metinleri, bağlantıları ve görselleri düzenle</summary><div id="visual-fields" class="fields"></div></details><details><summary>Gelişmiş: HTML düzenle</summary><label asp-for="BodyHtml">Sayfa içeriği (HTML)</label><p>Voku düzeni burada korunur. Görünen metinleri, görsel yollarını ve bağlantıları düzenleyebilirsiniz. Başlık alanı sayfa içindeki metinlerden bağımsızdır. Script eklemeyin.</p><textarea asp-for="BodyHtml" class="code" rows="28" spellcheck="false" required></textarea>
+<details open><summary>Metinleri, bağlantıları ve görselleri düzenle</summary><div id="visual-fields" class="fields"></div></details><details><summary>Gelişmiş: HTML düzenle</summary><label asp-for="BodyHtml">Sayfa içeriği (HTML)</label><p>Voku düzeni burada korunur. Görünen metinleri, görsel yollarını ve bağlantıları düzenleyebilirsiniz. Blog detayının ana başlığı yukarıdaki Başlık alanından alınır. Script eklemeyin.</p><textarea asp-for="BodyHtml" class="code" rows="28" spellcheck="false" required></textarea>
 </details><button class="primary">Değişiklikleri kaydet</button>
 </form>
 
