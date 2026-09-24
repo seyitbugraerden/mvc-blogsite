@@ -33,13 +33,13 @@ SQLite dosyası `Voku.Web/App_Data/voku.db` altında oluşturulur. Migration ve 
 | `/error` | `/admin/pages/error/edit` |
 | `/blog/{slug}` | `/admin/posts/{slug}/edit` |
 
-`/admin/posts/new` üzerinden Voku detay şablonuyla yeni yazı oluşturulur. Slug küçük harf, rakam ve tire kullanır; aynı türde benzersizdir. Slug değiştirildiğinde mevcut içeriklerdeki tam eşleşen bağlantılar güncellenir. Eski slug adresi 404 döner. Sabit sayfaların route'ları değiştirilemez. Yayından kaldırılan sayfalar 404 döner. `/blog` sayfasının altındaki dinamik liste yayınlanmış tüm detayları gösterir.
+`/admin/posts/new` üzerinden boş yazı gövdesiyle yeni blog yazısı oluşturulur. Slug küçük harf, rakam ve tire kullanır; aynı türde benzersizdir. Slug değiştirildiğinde mevcut içeriklerdeki tam eşleşen bağlantılar güncellenir. Eski slug adresi 404 döner. Sabit sayfaların route'ları değiştirilemez. Yayından kaldırılan sayfalar 404 döner. Ana sayfa son 6 yayınlanmış yazıyı gösterir. `/blog` aynı kayıtlardan 6 yazılık sayfalar oluşturur; kategori filtreleri gerçek yayınlanmış yazılardan gelir. Sıralama yazı tarihi, eşit tarihte kayıt kimliği azalan biçimdedir. Tarih gösterim/sıralama içindir; zamanlanmış yayın yoktur.
 
-Editörde metin, bağlantı ve görseller için alanlar bulunur. İç içe HTML içeren metinler, bölüm düzeni, arka plan görselleri ve diğer gelişmiş değişiklikler HTML alanından yapılır. Sayfa başlığı tarayıcı/liste başlığıdır; içerikteki görünür başlık ayrıca düzenlenir. Yeni detaylar mevcut detayın tasarımını kopyalar; içeriğini düzenleyip yayınlayın. Görsel yolları `/images/...` biçimindedir; bu sürümde dosya yükleme bulunmaz.
+Editörde metin, bağlantı ve görseller için alanlar bulunur. İç içe HTML içeren metinler, bölüm düzeni, arka plan görselleri ve diğer gelişmiş değişiklikler HTML alanından yapılır. Blog başlığı, özet, kapak görseli, kategori, yazar ve tarih admin formundan yönetilir; hem kartlarda hem detay sayfasında aynı kayıt kullanılır. Yazı gövdesini ayrıca düzenleyin. Sabit sayfaların HTML içindeki başlıkları yine gövdeden düzenlenir. Görsel yolları `/images/...` biçimindedir; bu sürümde dosya yükleme bulunmaz.
 
-Ana sayfa ve blogdaki dört örnek yazı kartı ayrı slug adreslerine bağlanır.
+Ana sayfa ve blogdaki bütün yazı kartları veritabanından oluşturulur. Yeni yayınlanan yazılar otomatik görünür; taslaklar görünmez. Sahte yorum ve fotoğraf sayaçları gösterilmez. Kategori filtresi: `/blog?category=Gezi`; sayfalama: `/blog?page=2`.
 
-Şablonun tüm sayfa gövdeleri veritabanında saklanır; üst/alt alanlar her sayfa için ayrı düzenlenir. `Voku-HTML-Package` orijinal referanstır; `Voku.Web/Content` başlangıç içerikleridir. İlk kurulumdan sonra değişiklikleri admin panelinden yapın.
+Sayfa gövdeleri veritabanında saklanır. Ana sayfa/blog HTML içindeki `<!-- BLOG_LIST -->` işareti dinamik liste yerini belirler. Eski veritabanlarında Voku `post-content` bölümü görüntüleme sırasında bu işaretle uyarlanır; migration eski HTML içeriklerini silmez. Blog detayları ana sayfanın üst/alt alanlarını paylaşır; ana başlık ve kapak Razor tarafından güncel kayıtla çizilir. Eski detayların örnek kategori ve yorum alanları gösterim sırasında kaldırılır. `Voku-HTML-Package` orijinal referanstır; `Voku.Web/Content` başlangıç içerikleridir. İlk kurulumdan sonra değişiklikleri admin panelinden yapın.
 
 Formlar e-posta göndermez ve veri kaydetmez; gönderim denemesinde kullanıcıya bilgi verilir. PHP ve SMTP entegrasyonu yoktur. Şablondaki Google Maps anahtarı kullanılmaz. Şablonun örnek metinleri ve sosyal bağlantıları yönetim panelinden özelleştirilebilir.
 
@@ -72,3 +72,9 @@ EF Core SQLite/migration referansı: https://learn.microsoft.com/en-us/ef/core/g
 [PDF: Voku CMS Eğitim Rehberi](docs/Voku-CMS-Egitim-Rehberi.pdf) — Kuruluş, kullanılan diller, MVC veri akışı, controller/view/model ilişkileri, EF Core, migrations, admin formları, slug yönetimi ve testleri 28 bölümde anlatır.
 
 [Tarayıcıda okunabilir HTML](docs/Voku-CMS-Egitim-Rehberi.html). Kaynak belge `docs/build_guide.py` ile üretilir. Rehber uygulamanın `2688cd4` sürümünü temel alır; örnek geliştirmeler mevcut özelliklerden ayrı belirtilmiştir.
+
+### Dinamik blog geçişi
+
+`AddBlogMetadata` migrationı uygulama yeniden başlatıldığında otomatik uygulanır. Yeni alanlar eklenir, mevcut yazı tarihleri `UpdatedUtc` değerinden alınır; eski başlık ve HTML içerikleri korunur. [Güncel dinamik blog mimarisi](docs/dynamic-blog.md), önceki PDF'in blog listeleme bölümlerinden sonra yapılan değişiklikleri açıklar.
+
+İsteğe bağlı tarayıcı testi: `tests/blog-browser.cjs` (Playwright ve bir Chromium tarayıcısı gerekir). `PLAYWRIGHT_MODULE` ve `BROWSER_EXECUTABLE` ile kurulum yolları, `SCREENSHOT_DIR` ile ekran görüntüsü dizini belirtilebilir. Test geçici veritabanı kullanır.
